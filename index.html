@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Множитель текстов</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+		<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+	</head>
+	<body>
+
+		<div class="container">
+			<main class="col-12 col-md-11 col-xl-10 py-md-3 pl-md-5 bd-content">
+				<form>
+					<div id='app_text'>
+						<div class="form-row">
+							<div class="input-group mb-1 col">
+								<div class="input-group-prepend">
+									<span class="input-group-text">Артикулы:</span>
+								</div>
+								<textarea id= "tt1" v-model="t1" rows="5" class="form-control"></textarea>
+							</div>
+							<div class="input-group mb-1 col">
+								<div class="input-group-prepend">
+									<span class="input-group-text">Названия:</span>
+								</div>
+								<textarea id= "tt2" v-model="t2" rows="5" class="form-control"></textarea>
+							</div>
+						</div>
+						<div class="input-group mb-3">
+							<div class="input-group-prepend">
+								<span class="input-group-text">Первое описание:</span>
+							</div>
+							<textarea id= "tt3" v-model="t3" rows="10" class="form-control"></textarea>
+						</div>
+						<div class="input-group mb-1">
+							<textarea id= "tt4" rows="15" v-on:edit="update" class="form-control">{{t4}}</textarea>
+						</div>
+					</div>
+				</form>
+			</main>
+		</div>
+		<script>
+			console.log('??');
+			var app = new Vue({
+				el: '#app_text',
+				data: {
+					t1: '',
+					t2: '',
+					t3: '',
+					ob1: document.getElementById('tt4'),
+				},
+				computed: {
+					t4: function () {
+						console.log('вычисление');
+						if (this.t1.length < 20 || this.t2.length < 20 || this.t3.length < 50) {return '';}
+						var vendor_array = this.t1.split('\n'),
+							name_array = this.t2.split('\n');
+						if (vendor_array.length != name_array.length) {
+							return 'Артикулов и названий неравное число.';
+						}
+						result = '';
+						let pattern = this.t3.trim(); pattern = pattern.replace('  ', ' ').replace('  ', ' ').replace('  ', ' ').replace('  ', ' ').replace(' - ', ' — ');
+						if (this.t3.indexOf(vendor_array[0]) > 1 && this.t3.indexOf(vendor_array[0]) > 1) {
+							result = pattern + '\n\n';
+							vendor_array[0] = vendor_array[0].trim();
+							vendor_array[0] = vendor_array[0].replace('  ', ' ').replace('  ', ' ');
+							name_array[0] = name_array[0].trim();
+							name_array[0] = name_array[0].replace('  ', ' ').replace('  ', ' ');
+
+							for (var i=1; i < vendor_array.length; i++) {
+								vendor_array[i] = vendor_array[i].trim();
+								vendor_array[i] = vendor_array[i].replace('  ', ' ').replace('  ', ' ');
+								name_array[i] = name_array[i].trim();
+								name_array[i] = name_array[i].replace('  ', ' ').replace('  ', ' ');
+								result = result.concat(pattern.replace(vendor_array[0], vendor_array[i]).replace(name_array[0], name_array[i]) + '\n\n' );
+							}
+							result = result.trim();
+							return result;						
+						} else {
+							return result;
+						}
+
+					},
+				},
+				methods: {
+					update : function (text, event) {
+						console.log(this.ob1);
+						this.ob1.select();
+						document.execCommand('copy');
+					},
+				},
+			});
+		</script>
+	</body>
+</html>
